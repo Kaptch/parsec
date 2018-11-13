@@ -65,7 +65,7 @@ data GenLanguageDef s u m
     -- | Describes the start of a line comment. Use the empty string if the
     -- language doesn't support line comments. For example \"\/\/\".
 
-    commentLine    :: String,
+    commentLine    :: [String],
 
     -- | Set to 'True' if the language supports nested block comments.
 
@@ -698,7 +698,7 @@ makeTokenParser languageDef
         | noMulti            = skipMany (simpleSpace <|> oneLineComment <?> "")
         | otherwise          = skipMany (simpleSpace <|> oneLineComment <|> multiLineComment <?> "")
         where
-          noLine  = null (commentLine languageDef)
+          noLine  = any null (commentLine languageDef)
           noMulti = null (commentStart languageDef)
 
 
@@ -706,10 +706,12 @@ makeTokenParser languageDef
         skipMany1 (satisfy isSpace)
 
     oneLineComment =
-        do{ _ <- try (string (commentLine languageDef))
+        do{ _ <- try f
           ; skipMany (satisfy (/= '\n'))
           ; return ()
           }
+            where
+              f = foldl1 (<|>) (string <$> commentLine languageDef)
 
     multiLineComment =
         do { _ <- try (string (commentStart languageDef))

@@ -40,7 +40,7 @@ haskellStyle :: LanguageDef st
 haskellStyle = emptyDef
                 { commentStart   = "{-"
                 , commentEnd     = "-}"
-                , commentLine    = "--"
+                , commentLine    = ["--"]
                 , nestedComments = True
                 , identStart     = letter
                 , identLetter    = alphaNum <|> oneOf "_'"
@@ -59,7 +59,7 @@ javaStyle  :: LanguageDef st
 javaStyle   = emptyDef
                 { commentStart   = "/*"
                 , commentEnd     = "*/"
-                , commentLine    = "//"
+                , commentLine    = ["//"]
                 , nestedComments = True
                 , identStart     = letter
                 , identLetter    = alphaNum <|> oneOf "_'"
@@ -81,7 +81,7 @@ emptyDef   :: LanguageDef st
 emptyDef    = LanguageDef
                { commentStart   = ""
                , commentEnd     = ""
-               , commentLine    = ""
+               , commentLine    = [""]
                , nestedComments = True
                , identStart     = letter <|> char '_'
                , identLetter    = alphaNum <|> oneOf "_'"
